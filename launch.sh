@@ -28,7 +28,7 @@ if [[ "$?" == "1" ]]; then
 	su postgres -c "createdb $WEBAPOLLO_HOST_FLAG $WEBAPOLLO_DB_NAME"
 	su postgres -c "psql $WEBAPOLLO_HOST_FLAG -c \"CREATE USER $WEBAPOLLO_DB_USERNAME WITH PASSWORD '$WEBAPOLLO_DB_PASSWORD';\""
 	su postgres -c "psql $WEBAPOLLO_HOST_FLAG -c \"GRANT ALL PRIVILEGES ON DATABASE $WEBAPOLLO_DB_NAME to $WEBAPOLLO_DB_USERNAME;\""
-#	su postgres -c "psql $WEBAPOLLO_HOST_FLAG < /dumpfile.sql"
+
 fi
 
 
@@ -47,4 +47,4 @@ if [[ ! -f "${CATALINA_HOME}/logs/catalina.out" ]]; then
 	touch ${CATALINA_HOME}/logs/catalina.out
 fi
 
-#tail -f ${CATALINA_HOME}/logs/catalina.out
+tail -f ${CATALINA_HOME}/logs/catalina.out
