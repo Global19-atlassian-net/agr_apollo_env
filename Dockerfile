@@ -1,8 +1,8 @@
 # WebApollo
 # VERSION 2.0
 FROM tomcat:8-jre8
-MAINTAINER Eric Rasche <esr@tamu.edu>, Anthony Bretaudeau <anthony.bretaudeau@inria.fr>, Nathan Dunn <nathandunn@lbl.gov>
-ENV DEBIAN_FRONTEND noninteractive 
+MAINTAINER Nathan Dunn <nathandunn@lbl.gov>
+ENV DEBIAN_FRONTEND noninteractive
 
 RUN apt-get -qq update --fix-missing && \
 	apt-get --no-install-recommends -y install \
@@ -21,6 +21,10 @@ RUN cp /usr/lib/jvm/java-8-openjdk-amd64/lib/tools.jar /usr/lib/jvm/java-8-openj
 ENV WEBAPOLLO_VERSION ad3a37bbe5a601d7f4ecfeb851f62382acd29df1
 RUN curl -L https://github.com/GMOD/Apollo/archive/${WEBAPOLLO_VERSION}.tar.gz | tar xzf - --strip-components=1 -C /apollo
 
+ENV JBROWSE_CONFIG_VERSION adb443e418807ba3bca75738e4ed125d3157b4b9
+RUN mkdir /jbrowse-config
+RUN curl -L https://github.com/alliance-genome/jbrowse-config/archive/${JBROWSE_CONFIG_VERSION}.tar.gz | tar xzf - --strip-components=1 -C /jbrowse-config
+RUN mv /jbrowse-config/jbrowse/data /data
 
 COPY build.sh /bin/build.sh
 ADD apollo-config.groovy /apollo/apollo-config.groovy
@@ -34,12 +38,10 @@ ENV CATALINA_HOME=/usr/local/tomcat/
 RUN rm -rf ${CATALINA_HOME}/webapps/* && \
 	cp /apollo/apollo*.war ${CATALINA_HOME}/apollo.war
 
+
 ENV CONTEXT_PATH ROOT
 
-# Download chado schema
-RUN wget --quiet https://github.com/erasche/chado-schema-builder/releases/download/1.31-jenkins97/chado-1.31.sql.gz -O /chado.sql.gz && \
-	gunzip /chado.sql.gz
-
+ADD dumpfile.sql /dumpfile.sql
 ADD launch.sh /launch.sh
 CMD "/launch.sh"
 
