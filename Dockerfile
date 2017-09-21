@@ -41,7 +41,6 @@ RUN rm -rf ${CATALINA_HOME}/webapps/* && \
 
 ENV CONTEXT_PATH ROOT
 
-ADD dumpfile.sql /dumpfile.sql
 ADD launch.sh /launch.sh
 CMD "/launch.sh"
 
