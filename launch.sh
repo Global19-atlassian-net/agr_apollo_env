@@ -29,6 +29,7 @@ if [[ "$?" == "1" ]]; then
 	su postgres -c "psql $WEBAPOLLO_HOST_FLAG -c \"CREATE USER $WEBAPOLLO_DB_USERNAME WITH PASSWORD '$WEBAPOLLO_DB_PASSWORD';\""
 	su postgres -c "psql $WEBAPOLLO_HOST_FLAG -c \"GRANT ALL PRIVILEGES ON DATABASE $WEBAPOLLO_DB_NAME to $WEBAPOLLO_DB_USERNAME;\""
 
+
 fi
 
 
@@ -47,4 +48,10 @@ if [[ ! -f "${CATALINA_HOME}/logs/catalina.out" ]]; then
 	touch ${CATALINA_HOME}/logs/catalina.out
 fi
 
-tail -f ${CATALINA_HOME}/logs/catalina.out
+# NOTE: should use env for all of these
+USERNAME="admin@local.host"
+PASSWORD="password"
+STATUS=`curl -I "http://localhost:8888/auth/login" 2>&/dev/null | grep "HTTP/1.1 200"`
+echo $STATUS
+
+tail -f ${CATALINA_HOME}/logs/catalina.out &
