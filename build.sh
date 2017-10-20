@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 cd /apollo/ && \
+	rm -rf /apollo/scripts || true && \
+    mkdir /apollo/scripts && \
+    cp /apollo/docs/web_services/examples/groovy/*.groovy /apollo/scripts/ && \
     ./apollo clean-all && ./apollo deploy && \
     cp /apollo/target/apollo*.war /tmp/apollo.war && \
 	# So we can remove ~1.6 GB of cruft from the image. Ignore errors because cannot remove parent dir /apollo/

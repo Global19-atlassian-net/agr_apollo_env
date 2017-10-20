@@ -29,6 +29,10 @@ RUN mv /jbrowse-config/jbrowse/data /data
 COPY build.sh /bin/build.sh
 ADD apollo-config.groovy /apollo/apollo-config.groovy
 
+
+#ADD install_groovy.sh /install_groovy.sh
+#CMD "/install_groovy.sh"
+
 RUN chown -R apollo:apollo /apollo
 USER apollo
 RUN bash /bin/build.sh
