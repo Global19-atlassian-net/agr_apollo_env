@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 cd /apollo/ && \
 	rm -rf /scripts || true && \
-    mkdir /scripts && \
+    mkdir /scripts || true && \
     cp /apollo/docs/web_services/examples/groovy/*.groovy /scripts/ && \
     ./apollo clean-all && ./apollo deploy && \
     cp /apollo/target/apollo*.war /tmp/apollo.war && \
