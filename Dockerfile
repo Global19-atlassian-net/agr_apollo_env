@@ -7,7 +7,7 @@ ENV DEBIAN_FRONTEND noninteractive
 RUN apt-get -qq update --fix-missing && \
 	apt-get --no-install-recommends -y install \
 	git build-essential maven tomcat8 libpq-dev postgresql-common openjdk-8-jdk wget \
-	postgresql postgresql-client xmlstarlet netcat libpng-dev \
+	postgresql postgresql-client xmlstarlet netcat libpng-dev zip \
 	zlib1g-dev libexpat1-dev ant curl ssl-cert
 
 RUN curl -sL https://deb.nodesource.com/setup_8.x | bash -
@@ -30,8 +30,8 @@ COPY build.sh /bin/build.sh
 ADD apollo-config.groovy /apollo/apollo-config.groovy
 
 
-#ADD install_groovy.sh /install_groovy.sh
-#CMD "/install_groovy.sh"
+ADD install_groovy.sh /install_groovy.sh
+RUN bash "/install_groovy.sh"
 
 RUN chown -R apollo:apollo /apollo
 USER apollo
