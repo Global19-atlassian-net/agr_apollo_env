@@ -45,6 +45,12 @@ RUN rm -rf ${CATALINA_HOME}/webapps/* && \
 
 ENV CONTEXT_PATH ROOT
 
+# load the working dump
+ENV APOLLO_DB_DUMP "agr_apollo_postgresql.sql"
+RUN wget https://s3.amazonaws.com/apollo-data/${APOLLO_DB_DUMP}.gz && \
+    gunzip ${APOLLO_DB_DUMP}.gz && \
+    mv ${APOLLO_DB_DUMP} /tmp
+
 ADD launch.sh /launch.sh
 CMD "/launch.sh"
 
