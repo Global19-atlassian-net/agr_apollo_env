@@ -1,4 +1,20 @@
+
+
+AGR implementation:
+
+- Built here: https://hub.docker.com/r/agrdocker/agr_apollo_env   
+- Source (here): https://github.com/alliance-genome/agr_apollo_env   
+
+- To run: 
+  - `docker run -it -p 8888:8080 agrdocker/agr_apollo_env`
+  - `docker run -it -p 8888:8080 <built image>`
+- To test, should be preconfigured: 
+  - `curl http://localhost:8888/track/Danio%20rerio/All%20Genes/3:62343297..62348422.json?name=sox9b`
+  - View / administrate: `http://localhost:8888/annotator`  admin@local.host / password
+
 # Apollo
+
+Forked from here.
 
 ![Apollo Logo](https://github.com/GMOD/docker-apollo/raw/master/img/ApolloLogo_100x36.png)
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.268535.svg)](https://doi.org/10.5281/zenodo.268535)
