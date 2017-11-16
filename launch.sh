@@ -34,6 +34,7 @@ if [[ "$?" == "1" ]]; then
     su postgres -c "psql $WEBAPOLLO_HOST_FLAG -c \"CREATE ROLE apollo2_user WITH PASSWORD '$WEBAPOLLO_DB_PASSWORD';\""
     su postgres -c "psql $WEBAPOLLO_HOST_FLAG -c \"GRANT ALL PRIVILEGES ON DATABASE $WEBAPOLLO_DB_NAME to $WEBAPOLLO_DB_USERNAME;\""
     su postgres -c "psql $WEBAPOLLO_DB_NAME -f /tmp/${APOLLO_DB_DUMP} ;"
+    su postgres -c "psql $WEBAPOLLO_HOST_FLAG -c \"GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA public to $WEBAPOLLO_DB_USERNAME;\""
 fi
 
 

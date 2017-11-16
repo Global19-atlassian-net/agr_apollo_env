@@ -24,7 +24,7 @@ RUN curl -L https://github.com/GMOD/Apollo/archive/${WEBAPOLLO_VERSION}.tar.gz |
 ENV JBROWSE_CONFIG_VERSION 8573e57601634890352e3df3cd6c3b4fa0e4672d
 RUN mkdir /jbrowse-config
 RUN curl -L https://github.com/alliance-genome/jbrowse-config/archive/${JBROWSE_CONFIG_VERSION}.tar.gz | tar xzf - --strip-components=1 -C /jbrowse-config
-RUN mv /jbrowse-config/jbrowse/data /data
+#RUN mv /jbrowse-config/jbrowse/data /data
 
 COPY build.sh /bin/build.sh
 ADD apollo-config.groovy /apollo/apollo-config.groovy
@@ -46,8 +46,8 @@ RUN rm -rf ${CATALINA_HOME}/webapps/* && \
 ENV CONTEXT_PATH ROOT
 
 # load the working dump
-ENV APOLLO_DB_DUMP "agr_apollo_postgresql.sql"
-RUN wget https://s3.amazonaws.com/apollo-data/${APOLLO_DB_DUMP}.gz && \
+ENV APOLLO_DB_DUMP "agr_apollo_postgresql3.sql"
+RUN wget -q https://s3.amazonaws.com/apollo-data/${APOLLO_DB_DUMP}.gz && \
     gunzip ${APOLLO_DB_DUMP}.gz && \
     mv ${APOLLO_DB_DUMP} /tmp
 
