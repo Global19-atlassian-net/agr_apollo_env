@@ -10,3 +10,4 @@ cd /apollo/ && \
 	# Before moving back into a standardized location (that we have write access to)
 	mv /tmp/apollo.war /apollo/apollo.war || true && \
 	mv /tmp/scripts /apollo/scripts
+
