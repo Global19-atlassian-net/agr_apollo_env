@@ -14,6 +14,12 @@ fi
 
 echo "WEBAPOLLO_HOST_FLAG: $WEBAPOLLO_HOST_FLAG"
 
+# load the working dump
+APOLLO_DB_DUMP="agr_apollo_postgresql.sql"
+wget https://s3.amazonaws.com/apollo-data/${APOLLO_DB_DUMP}.gz
+gunzip ${APOLLO_DB_DUMP}.gz
+mv ${APOLLO_DB_DUMP} /tmp
+
 echo "Waiting for DB"
 until pg_isready $WEBAPOLLO_HOST_FLAG; do
 	echo -n "."
@@ -23,14 +29,17 @@ done
 echo "Postgres is up, configuring database"
 
 su postgres -c "psql $WEBAPOLLO_HOST_FLAG -lqt | cut -d \| -f 1 | grep -qw $WEBAPOLLO_DB_NAME"
-if [[ "$?" == "1" ]]; then
-	echo "Apollo database not found, creating..."
-	su postgres -c "createdb $WEBAPOLLO_HOST_FLAG $WEBAPOLLO_DB_NAME"
-	su postgres -c "psql $WEBAPOLLO_HOST_FLAG -c \"CREATE USER $WEBAPOLLO_DB_USERNAME WITH PASSWORD '$WEBAPOLLO_DB_PASSWORD';\""
-	su postgres -c "psql $WEBAPOLLO_HOST_FLAG -c \"GRANT ALL PRIVILEGES ON DATABASE $WEBAPOLLO_DB_NAME to $WEBAPOLLO_DB_USERNAME;\""
-
-
+# drop the database if found
+if [[ "$?" != "1" ]]; then
+    su postgres -c "dropdb $WEBAPOLLO_HOST_FLAG $WEBAPOLLO_DB_NAME"
 fi
+
+echo "Apollo database not found, creating..."
+su postgres -c "createdb $WEBAPOLLO_HOST_FLAG $WEBAPOLLO_DB_NAME"
+su postgres -c "psql $WEBAPOLLO_HOST_FLAG -c \"CREATE USER $WEBAPOLLO_DB_USERNAME WITH PASSWORD '$WEBAPOLLO_DB_PASSWORD';\""
+su postgres -c "psql $WEBAPOLLO_HOST_FLAG -c \"CREATE ROLE apollo2_user WITH PASSWORD '$WEBAPOLLO_DB_PASSWORD';\""
+su postgres -c "psql $WEBAPOLLO_HOST_FLAG -c \"GRANT ALL PRIVILEGES ON DATABASE $WEBAPOLLO_DB_NAME to $WEBAPOLLO_DB_USERNAME;\""
+su postgres -c "psql $WEBAPOLLO_DB_NAME -f /tmp/${APOLLO_DB_DUMP} ;"
 
 
 # https://tomcat.apache.org/tomcat-8.0-doc/config/context.html#Naming
@@ -49,9 +58,9 @@ if [[ ! -f "${CATALINA_HOME}/logs/catalina.out" ]]; then
 fi
 
 # NOTE: should use env for all of these
-USERNAME="admin@local.host"
-PASSWORD="password"
-STATUS=`curl -I "http://localhost:8888/auth/login" 2>&/dev/null | grep "HTTP/1.1 200"`
-echo $STATUS
+#USERNAME="admin@local.host"
+#PASSWORD="password"
+#STATUS=`curl -I "http://localhost:8888/auth/login" 2>&1 /dev/null | grep "HTTP/1.1 200"`
+#echo $STATUS
 
 tail -f ${CATALINA_HOME}/logs/catalina.out &

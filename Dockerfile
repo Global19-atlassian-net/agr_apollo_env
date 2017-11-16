@@ -48,6 +48,6 @@ ENV CONTEXT_PATH ROOT
 ADD launch.sh /launch.sh
 CMD "/launch.sh"
 
-ADD add_data.sh /add_data.sh
-CMD "/add_data.sh"
+#ADD add_data.sh /add_data.sh
+#CMD "/add_data.sh"
 
